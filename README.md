@@ -11,7 +11,7 @@
 
 ## What is this repository for
 
-* This repository contains the Coq source code that comes as a companion to the paper [*Proof Pearl: Constructive Extraction of Cycle Finding Algorithms*](http://www.loria.fr/~larchey/papers/ITP_2018_paper_16.pdf) by [Dominique Larchey-Wendling](http://www.loria.fr/~larchey), currently submitted to ITP 2018.
+* This repository contains the Coq source code that comes as a companion to the paper [*Proof Pearl: Constructive Extraction of Cycle Finding Algorithms*](http://www.loria.fr/~larchey/papers/ITP_2018_paper_16.pdf) by [Dominique Larchey-Wendling](http://www.loria.fr/~larchey). The paper has been accepted for presentation at ITP 2018.
 
 ## How do I set it up
 
