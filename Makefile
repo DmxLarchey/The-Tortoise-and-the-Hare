@@ -115,7 +115,8 @@ VFILES:=floyd.v\
   php.v\
   th_finite.v\
   cycle_undec.v\
-  th_rel.v
+  th_rel.v\
+  th_min.v
 
 ifneq ($(filter-out archclean clean cleanall printenv,$(MAKECMDGOALS)),)
 -include $(addsuffix .d,$(VFILES))
