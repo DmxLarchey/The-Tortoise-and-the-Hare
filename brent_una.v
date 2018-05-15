@@ -9,7 +9,7 @@
 
 Require Import Arith Euclid Omega Relations.
 
-Require Import utils.
+Require Import utils brent_common.
 
 Set Implicit Arguments.
 
@@ -40,25 +40,7 @@ Section Brent.
   Infix "=?" := eqdec (at level 70).
 
   Variable (f : X -> X) (x0 : X) (Hx0 : exists τ, 0 < τ /\ f↑τ x0 = f↑(2*τ) x0).
-  
-  (* This is another cyclicity condition *)
-  
-  Fact brent_cyclicity p : exists l q, p < q /\ 1 <= l <= pow2 q /\ f↑(pow2 q - 1) x0 = f↑(l+pow2 q - 1) x0.
-  Proof.
-    destruct Hx0 as (m & H1 & H2).
-    destruct (pow2_inter H1) as (q & Hq).
-    assert (m < pow2 (S (p+q))) as Hm.
-    { apply lt_le_trans with (pow2 (S q)).
-      omega.
-      rewrite <- pow2_mono; omega. }
-    exists m, (S (p+q)).
-    repeat split; try omega.
-    revert Hm; generalize (pow2 (S (p+q))); intros n Hn.
-    replace (n-1) with ((n-1-m)+m) by omega.
-    replace (m+n-1) with ((n-1-m)+2*m) by omega.
-    do 2 rewrite iter_plus; f_equal; auto.
-  Qed.
-  
+
   Inductive bar_br l p : nat -> X -> X ->  Prop :=
     | in_bar_br_0 : forall m x,   bar_br    l    p      m  x    x 
 
@@ -207,7 +189,7 @@ Section Brent.
   Let pre_bar l ppl pml x y : pre l ppl pml x y -> bar_br l ppl pml x y.
   Proof.
     intros (q & H1 & H2 & H3 & H4 & H5).
-    destruct (brent_cyclicity q) as (l' & q' & H7 & H8 & H9).
+    destruct brent_cyclicity with (1 := Hx0) (p := q) as (l' & q' & H7 & H8 & H9).
     rewrite H1, H2, H4, H5.
     apply lex_bar_br with (3 := H8); auto.
     rewrite H9; constructor.

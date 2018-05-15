@@ -116,7 +116,8 @@ VFILES:=floyd.v\
   th_finite.v\
   cycle_undec.v\
   th_rel.v\
-  th_min.v
+  th_min.v\
+  brent_common.v
 
 ifneq ($(filter-out archclean clean cleanall printenv,$(MAKECMDGOALS)),)
 -include $(addsuffix .d,$(VFILES))
