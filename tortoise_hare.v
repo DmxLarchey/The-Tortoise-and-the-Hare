@@ -37,12 +37,11 @@ Section Tortoise_and_Hare.
   Proof.
     refine (match x =? y with
              | left E  => exist _ 0 _
-             | right C => match tort_hare_rec (f x) (f (f y)) _ with
-                            | exist _ k Hk => exist _ (S k) _
-                          end
+             | right C => let (k,Hk) := tort_hare_rec (f x) (f (f y)) _ 
+                          in  exist _ (S k) _
            end).
     * auto.
-    * destruct H; auto; contradict C; trivial.
+    * inversion H; tauto.
     * finish with Hk.
   Defined.
 
@@ -64,16 +63,9 @@ Section Tortoise_and_Hare.
     end).
     split; try omega; finish with Hk.
   Defined.
-  
-  (** We add an accumulator argument to convert tortoise_hare_rec
-      to tail-recursion *)
-
-  Inductive bar_tl i x y : Prop :=
-    | in_bar_tl_0 : x = y                        -> bar_tl i x y 
-    | in_bar_tl_1 : bar_tl (S i) (f x) (f (f y)) -> bar_tl i x y.
 
   Let tortoise_hare_tail_rec : 
-    forall i x y, bar_tl i x y -> { k | i <= k /\ f↑(k-i) x = f↑(2*(k-i)) y }.
+    forall i x y, bar_th x y -> { k | i <= k /\ f↑(k-i) x = f↑(2*(k-i)) y }.
   Proof.
     refine (fix loop i x y H { struct H } := 
            match x =? y with
@@ -83,23 +75,13 @@ Section Tortoise_and_Hare.
                           end
            end).
     * split; f_equal; auto; omega.
-    * destruct H; auto; contradict C; trivial.
+    * inversion H; tauto.
     * destruct Hk; split; try omega; finish with H1.
-  Qed.
-
-  Let bar_tl_1_fx0_ffx0 : bar_tl 1 (f x0) (f (f x0)).
-  Proof.
-    destruct Hx0 as (k & H1 & H2).
-    apply in_bar_tl_0 with (i := k) in H2.
-    revert k H1 H2; apply nat_rev_ind. 
-    intros ? H; apply in_bar_tl_1; finish with H.
   Qed.
 
   Definition tortoise_hare_tail : { τ | 0 < τ /\ f↑τ x0 = f↑(2*τ) x0 }.
   Proof.
-    refine (match tortoise_hare_tail_rec bar_tl_1_fx0_ffx0 with
-      | exist _ k Hk => exist _ k _
-    end).
+    refine (let (k,Hk) := tortoise_hare_tail_rec 1 bar_th_fx0_ffx0 in exist _ k _).
     destruct Hk as (? & Hk); split; try omega.
     finish with Hk.
   Defined.
